@@ -23,17 +23,13 @@ CosyShareCard is a reusable Android library written in Java. It renders a brande
 ## Screenshots
 
 <p align="center">
-  <img src="docs/images/full1.jpg" width="240"
-       alt="CosyShareCard Preview Dark"/>
-  <img src="docs/images/full2.jpg" width="240"
-       alt="CosyShareCard Preview Light"/>
+  <img src="docs/images/full1.png" width="240" alt="CosyShareCard full preview 1"/>
+  <img src="docs/images/full2.png" width="240" alt="CosyShareCard full preview 2"/>
 </p>
 
 <p align="center">
-  <img src="docs/images/mini1.jpg" width="240"
-       alt="CosyShareCard Mini Card Light"/>
-  <img src="docs/images/mini2.jpg" width="240"
-       alt="Mini Card Shared Dark Preview"/>
+  <img src="docs/images/mini1.jpg" width="240" alt="CosyShareCard mini preview 1"/>
+  <img src="docs/images/mini2.jpg" width="240" alt="CosyShareCard mini preview 2"/>
 </p>
 
 ## Requirements
