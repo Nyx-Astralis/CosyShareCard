@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Scoreboard</string>
+    <string name="empty_string">\n</string>
+    <string name="str_lorem_ipsum_short"> Lorem Ipsum </string>
+    <string name="str_lorem_ipsum_long"> Lorem Ipsum has been the industry standard dummy text ever since 1966, when designers at Letraset and James</string>
+    <string name="str_get_it_on_google_play_store">GET IT ON GOOGLE PLAY STORE</string>
+    <string name="str_by_studio868">by Studio868</string>
+
+
+</resources>

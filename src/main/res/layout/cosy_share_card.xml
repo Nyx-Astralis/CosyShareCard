@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shareCardRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cosy_bg_share_backdrop"
+    android:clipChildren="false"
+    tools:theme="@style/CosyShareCardRenderTheme">
+
+    <!-- BACKGROUND LAYER -->
+
+    <FrameLayout
+        android:id="@+id/shareBackgroundLayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <ImageView
+            android:id="@+id/ivShareBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/cosy_share_background"
+            tools:visibility="invisible" />
+
+        <!-- Dark overlay to improve contrast -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#33000000"
+            tools:visibility="invisible" />
+
+    </FrameLayout>
+
+    <!-- MAIN SHARE CARD -->
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardShareContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="8dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:cardBackgroundColor="@color/share_card_background_light"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <!-- PERCENTAGE GUIDELINES -->
+
+            <!-- Header occupies 11% of card height -->
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideHeaderBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.11" />
+
+            <!-- Main content ends at 84% -->
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideMainBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.84" />
+
+            <!-- Right-side section retains its original 48dp width -->
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideSideStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="48dp" />
+
+            <!-- TOP HEADER -->
+
+            <TextView
+                android:id="@+id/tvShareHeader"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:fontFamily="@font/inter"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.06"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/str_lorem_ipsum_short"
+                android:textColor="@color/share_card_text_primary_light"
+                android:textSize="10sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/divider1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="SmallSp,VisualLintSystemUi" />
+
+            <!-- FIRST HORIZONTAL DIVIDER -->
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/share_card_divider_light"
+                app:layout_constraintTop_toTopOf="@id/guideHeaderBottom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- MAIN TITLE -->
+
+            <TextView
+                android:id="@+id/tvShareTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montagu_slab"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="2dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/share_card_text_primary_light"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:maxLines="3"
+                android:ellipsize="end"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/divider2"
+                app:layout_constraintTop_toBottomOf="@id/divider1"
+                app:layout_constraintBottom_toTopOf="@id/tvShareDescription"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:ignore="TextContrastCheck"
+                tools:text="@string/str_lorem_ipsum_short" />
+
+            <!-- MAIN DESCRIPTION -->
+
+            <TextView
+                android:id="@+id/tvShareDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppins"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="2dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/share_card_text_secondary_light"
+                android:textSize="14sp"
+                android:maxLines="4"
+                android:ellipsize="end"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/divider2"
+                app:layout_constraintTop_toBottomOf="@id/tvShareTitle"
+                app:layout_constraintBottom_toTopOf="@id/divider3"
+                tools:ignore="TextContrastCheck"
+                tools:text="@string/str_lorem_ipsum_long" />
+
+            <!-- SECOND DIVIDER: VERTICAL -->
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/share_card_divider_light"
+                app:layout_constraintStart_toStartOf="@id/guideSideStart"
+                app:layout_constraintTop_toBottomOf="@id/divider1"
+                app:layout_constraintBottom_toTopOf="@id/divider3" />
+
+            <!-- RIGHT VERTICAL SIDE SECTION -->
+
+            <TextView
+                android:id="@+id/tvShareSideText"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.09"
+                android:rotation="90"
+                android:text="@string/str_get_it_on_google_play_store"
+                android:textColor="@color/share_card_text_secondary_light"
+                android:textSize="9sp"
+                android:textAllCaps="false"
+                app:layout_constraintStart_toStartOf="@id/divider2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider1"
+                app:layout_constraintBottom_toTopOf="@id/divider3"
+                tools:ignore="SmallSp,TextContrastCheck,VisualLintBounds" />
+
+            <!-- THIRD HORIZONTAL DIVIDER -->
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/share_card_divider_light"
+                app:layout_constraintTop_toTopOf="@id/guideMainBottom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- BOTTOM FOOTER: APPLICATION ICON -->
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivShareAppIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="16dp"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.ShareCard.Circle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:ignore="VisualLintBounds"
+                tools:src="@drawable/cosy_share_background" />
+
+            <!-- AUTHOR -->
+
+            <TextView
+                android:id="@+id/tvShareAuthor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:fontFamily="@font/poppins"
+                android:includeFontPadding="false"
+                android:text="@string/str_by_studio868"
+                android:textColor="@color/share_card_text_secondary_light"
+                android:textSize="13sp"
+                app:layout_constraintStart_toEndOf="@id/ivShareAppIcon"
+                app:layout_constraintEnd_toStartOf="@id/tvShareBrand"
+                app:layout_constraintTop_toBottomOf="@id/divider3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:ignore="NestedWeights,TextContrastCheck" />
+
+            <!-- BRAND -->
+
+            <TextView
+                android:id="@+id/tvShareBrand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/montagu_slab"
+                android:includeFontPadding="false"
+                android:text="@string/str_lorem_ipsum_short"
+                android:textAllCaps="true"
+                android:textColor="@color/share_card_text_primary_light"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:ignore="TextContrastCheck" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>
