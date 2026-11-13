@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id("maven-publish")
 }
 
 android {
@@ -17,6 +18,12 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
     }
 
     compileOptions {
@@ -37,4 +44,18 @@ dependencies {
 
 base {
     archivesName.set("CosyShareCard")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            register<MavenPublication>("release") {
+                from(components["release"])
+
+                groupId = "com.github.Nyx-Astralis"
+                artifactId = "CosyShareCard"
+                version = System.getenv("VERSION") ?: "1.0.0"
+            }
+        }
+    }
 }
