@@ -1,10 +1,75 @@
-# CosyShareCard Usage Guide
+# CosyShareCard — Usage Guide
 
-This guide covers integrating CosyShareCard 1.0.0 into an Android application and using its public Java API.
+This guide explains how to add CosyShareCard to an Android project, configure a card, and share the generated image.
 
-## 1. Add the repository and dependency
+- [Before you start](#before-you-start)
+- [Install the library](#install-the-library)
+- [Create and share a card](#create-and-share-a-card)
+- [Configure card content](#configure-card-content)
+- [Choose a theme](#choose-a-theme)
+- [Configure background blur](#configure-background-blur)
+- [Understand the share result](#understand-the-share-result)
+- [Validation and errors](#validation-and-errors)
+- [Troubleshooting](#troubleshooting)
 
-In the project's `settings.gradle.kts`, add JitPack inside the existing dependency repositories:
+## Before you start
+
+CosyShareCard is a Java Android library. It can be used from Java or Kotlin Android applications.
+
+| Requirement | Minimum / value |
+| --- | --- |
+| Android | API 26 (Android 8.0) |
+| Compile SDK | 37 or higher |
+| Java compatibility | Java 11 |
+
+Your Android Gradle Plugin and Gradle versions must be compatible with the rest of your Android project.
+
+## Install the library
+
+Use one dependency source. Maven Central is recommended; JitPack is available as an alternative.
+
+### Option A: Maven Central
+
+Make sure `mavenCentral()` is listed in your dependency repositories. For example, in `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+```
+
+Then add the dependency to the app module's `build.gradle.kts`:
+
+```kotlin
+dependencies {
+    implementation("io.github.nyx-astralis:cosysharecard:1.0.0")
+}
+```
+
+Groovy equivalent (`build.gradle`):
+
+```groovy
+dependencies {
+    implementation 'io.github.nyx-astralis:cosysharecard:1.0.0'
+}
+```
+
+Maven Central coordinates:
+
+| Coordinate | Value |
+| --- | --- |
+| Group ID | `io.github.nyx-astralis` |
+| Artifact ID | `cosysharecard` |
+| Version | `1.0.0` |
+
+The initial release can take some time to propagate after it is published. If version `1.0.0` is not yet resolving from Maven Central, use JitPack as a temporary alternative while repository mirrors update.
+
+### Option B: JitPack
+
+Add the JitPack repository to `dependencyResolutionManagement.repositories` in `settings.gradle.kts`:
 
 ```kotlin
 dependencyResolutionManagement {
@@ -16,7 +81,7 @@ dependencyResolutionManagement {
 }
 ```
 
-Do not remove repositories your project already needs. Then add the library to `app/build.gradle.kts`:
+Then add the JitPack dependency to the app module:
 
 ```kotlin
 dependencies {
@@ -24,143 +89,152 @@ dependencies {
 }
 ```
 
-Sync the project.
+Groovy equivalent:
 
-## 2. Create a share card
+```groovy
+dependencies {
+    implementation 'com.github.Nyx-Astralis:CosyShareCard:1.0.0'
+}
+```
 
-The public entry point is `CosyShareCard.createShareIntent(CosyShareCardBuilder)`. The builder takes an Android `Context` and provides chainable setters.
+Do not remove repositories your application already needs. Avoid adding the same repository more than once. After changing dependencies, sync the project with Gradle.
+
+## Create and share a card
+
+The main entry points are `CosyShareCardBuilder`, `CosyShareCard`, and `CosyShareCardTheme`.
+
+Create the builder with an Activity context, set the content, request the share intent, and launch it:
 
 ```java
+import android.content.Intent;
+import android.widget.Toast;
+
+import com.studio868.cosysharecard.CosyShareCard;
+import com.studio868.cosysharecard.CosyShareCardBuilder;
+import com.studio868.cosysharecard.CosyShareCardTheme;
+
+import java.io.IOException;
+
 private void shareCard() {
     CosyShareCardBuilder builder = new CosyShareCardBuilder(this)
-        .setHeader("ANNOUNCEMENT")
-        .setTitle("Something worth sharing")
-        .setDescription("Add a short description of the update here.")
-        .setSideText("NEW RELEASE")
-        .setAuthor("Nyx Astralis")
-        .setBrand("MY APP")
-        .setShareText("Take a look at this update.")
-        .setShareLink("https://example.com")
-        .setTheme(CosyShareCardTheme.AUTO)
-        .setBlurRadius(28f);
+            .setHeader("A LITTLE UPDATE")
+            .setTitle("A moment worth sharing")
+            .setDescription("A custom image card created inside my Android app.")
+            .setSideText("MY UPDATE")
+            .setAuthor("Your Name")
+            .setBrand("Your App")
+            .setShareText("Here's something I wanted to share.")
+            .setShareLink("https://example.com")
+            .setTheme(CosyShareCardTheme.AUTO);
 
     try {
-        startActivity(CosyShareCard.createShareIntent(builder));
+        Intent shareIntent = CosyShareCard.createShareIntent(builder);
+        startActivity(shareIntent);
     } catch (IOException e) {
-        // Show an error to the user or log it for diagnosis.
-        Toast.makeText(this, "Could not create the card.", Toast.LENGTH_LONG).show();
+        Toast.makeText(
+                this,
+                "Unable to create share card: " + e.getMessage(),
+                Toast.LENGTH_LONG
+        ).show();
     }
 }
 ```
 
-Use the Activity context when creating the builder from an Activity. The library also reads the consuming app's launcher icon for the card footer.
+Call this method from an Activity, such as a button's click listener. `createShareIntent()` returns the chooser `Intent`; your Activity launches it with `startActivity()`.
 
-## 3. Select the theme
+## Configure card content
 
-`CosyShareCardTheme` has three values:
+All text fields are optional. Set only the values you need.
 
-- `AUTO`: follows the current UI night-mode setting.
-- `LIGHT`: always renders the light palette.
-- `DARK`: always renders the dark palette.
+| Builder method | What it changes | Printed on image? |
+| --- | --- | --- |
+| `setHeader(String)` | Small heading at the top of the card. | Yes |
+| `setTitle(String)` | Main title. The fixed layout displays up to three lines. | Yes |
+| `setDescription(String)` | Supporting description. The fixed layout displays up to four lines. | Yes |
+| `setSideText(String)` | Rotated label along the right edge. | Yes |
+| `setAuthor(String)` | Author text in the footer. | Yes |
+| `setBrand(String)` | Brand text in the footer. | Yes |
+| `setShareText(String)` | Text included in the Android share message. | No |
+| `setShareLink(String)` | Link appended to the Android share message. | No |
+
+The consuming app's launcher icon is included automatically. There is no builder option for supplying a different icon in version 1.0.0.
+
+## Choose a theme
+
+Pass one of the `CosyShareCardTheme` values to `setTheme()`:
 
 ```java
+builder.setTheme(CosyShareCardTheme.LIGHT);
 builder.setTheme(CosyShareCardTheme.DARK);
+builder.setTheme(CosyShareCardTheme.AUTO);
 ```
 
-Do not pass `null` as the theme.
-
-## 4. Configure backdrop blur
-
-The default blur radius is `28f` dp. Reduce it for a softer blur or pass zero to leave the bundled backdrop unblurred:
-
-```java
-builder.setBlurRadius(12f);
-builder.setBlurRadius(0f); // Disable blur
-```
-
-Negative values are rejected.
-
-## 5. Understand the generated content
-
-The card image is rendered at a 16:9 aspect ratio. The app's launcher icon is inserted automatically. The text fields map to these areas:
-
-| Builder field | Rendered location |
+| Theme | Behavior |
 | --- | --- |
-| `header` | Top header |
-| `title` | Main title |
-| `description` | Main body copy |
-| `sideText` | Rotated right-side label |
-| `author` | Footer, next to the app icon |
-| `brand` | Footer, aligned to the right |
+| `LIGHT` | Always renders using the light theme. |
+| `DARK` | Always renders using the dark theme. |
+| `AUTO` | Follows the device/app night-mode setting. |
 
-The fixed layout allows up to three lines for the title and four lines for the description; longer text is ellipsized. Keep those fields concise for the best result.
+## Configure background blur
 
-`shareText` and `shareLink` are not visible in the image. If either is non-empty, the library appends it to the outgoing share message. When both are supplied, the message is separated by a blank line.
-
-## 6. File sharing and manifest integration
-
-The library saves the generated PNG in the app's internal cache under `shared_images/` and creates a `content://` URI through AndroidX `FileProvider`. The library's own manifest contributes the provider declaration and file-path resource. The authority is `${applicationId}.cosysharecard.fileprovider`.
-
-In a standard Gradle Android library dependency, manifest merging handles this for the app. Avoid adding a duplicate provider with the same authority. No public storage permission is required.
-
-The resulting intent is an `ACTION_SEND` intent with MIME type `image/png`, wrapped in a chooser. The library returns the chooser intent; the host Activity is responsible for launching it.
-
-## 7. Threading and errors
-
-Call `createShareIntent()` on the main/UI thread. The implementation inflates, measures, and draws Android Views while generating the PNG.
-
-The method declares `IOException`. Handle it in the caller. Invalid inputs can also cause `IllegalArgumentException`, including a null builder/context/theme or a negative blur radius.
-
-## 8. Troubleshooting
-
-### Gradle cannot resolve the dependency
-
-- Check that `maven { url = uri("https://jitpack.io") }` is inside the repository block used by dependency resolution.
-- Confirm the dependency coordinate is exactly `com.github.Nyx-Astralis:CosyShareCard:1.0.0`.
-- Sync Gradle again and inspect the JitPack build page for the `1.0.0` tag.
-
-### Sharing fails while creating the image
-
-- Make sure the app has enough internal cache space.
-- Catch and inspect the `IOException` from `createShareIntent()`.
-- Do not replace the library's provider authority with a hard-coded package name.
-
-### The app icon does not appear as expected
-
-The icon is read from the consuming application's launcher icon. Check the app's launcher icon resources and manifest configuration.
-
-## 9. Public API reference
-
-### `CosyShareCard`
+Use `setBlurRadius(float)` to change the background blur radius. The default is `28f` dp.
 
 ```java
-public static Intent createShareIntent(CosyShareCardBuilder builder) throws IOException
+builder.setBlurRadius(18f); // Softer blur.
+builder.setBlurRadius(0f);  // Disable blur.
 ```
 
-Creates the PNG and returns an Android chooser `Intent` for sharing it.
+Negative values are invalid and are rejected.
 
-### `CosyShareCardBuilder`
+## Understand the share result
+
+When `createShareIntent()` is called, the library:
+
+1. Inflates its bundled card layout and applies the builder content and theme.
+2. Reads the consuming application's launcher icon.
+3. Renders the design as a 16:9 PNG image.
+4. Writes the PNG into the app's internal cache under `cache/shared_images/`.
+5. Creates a read-granted content URI through the library's `FileProvider` configuration.
+6. Returns an Android share chooser intent using `Intent.ACTION_SEND`.
+
+The image is shared as a content URI, not as a public filesystem path. The library manifest includes the provider declaration and uses an authority derived from the consuming app's application ID. The Android manifest merger normally handles this automatically; do not add a duplicate provider declaration without first checking the merged manifest.
+
+Generated images remain in the app's cache and are not automatically saved to the user's gallery. Android can remove cache files when it needs storage space. No public-storage permission is required.
+
+## Validation and errors
+
+- Call the rendering/share-intent method on the Android main/UI thread because it uses Android Views.
+- Handle `IOException` from `createShareIntent()`. For example, writing the generated PNG can fail if the cache directory is unavailable.
+- A null context, null builder, null theme, or negative blur radius is invalid and can cause `IllegalArgumentException`.
+- The `setShareText()` and `setShareLink()` values are added to the share message (`Intent.EXTRA_TEXT`); they are not drawn on the PNG.
+
+## Troubleshooting
+
+### Gradle cannot find the dependency
+
+- Confirm the dependency coordinates match the selected repository.
+- For Maven Central, confirm `mavenCentral()` is present in the dependency repositories.
+- For JitPack, confirm `maven { url = uri("https://jitpack.io") }` is present in the dependency repositories.
+- Check that the version is `1.0.0`, then sync Gradle again.
+- A new Maven Central release may need time to propagate. Try JitPack while Central mirrors and indexes update.
+
+### The share chooser does not appear
+
+`createShareIntent()` creates and returns the intent; it does not launch the chooser. Start the returned intent from your Activity:
 
 ```java
-public CosyShareCardBuilder(Context context)
-public CosyShareCardBuilder setHeader(String header)
-public CosyShareCardBuilder setTitle(String title)
-public CosyShareCardBuilder setDescription(String description)
-public CosyShareCardBuilder setSideText(String sideText)
-public CosyShareCardBuilder setAuthor(String author)
-public CosyShareCardBuilder setBrand(String brand)
-public CosyShareCardBuilder setShareText(String shareText)
-public CosyShareCardBuilder setShareLink(String shareLink)
-public CosyShareCardBuilder setBlurRadius(float blurRadius)
-public CosyShareCardBuilder setTheme(CosyShareCardTheme theme)
+Intent shareIntent = CosyShareCard.createShareIntent(builder);
+startActivity(shareIntent);
 ```
 
-### `CosyShareCardTheme`
+### The PNG is not saved in the gallery
 
-```java
-public enum CosyShareCardTheme {
-    AUTO,
-    LIGHT,
-    DARK
-}
-```
+This is expected. CosyShareCard writes the generated image to the app's internal cache for sharing. It does not save a permanent copy to the public gallery.
+
+### The app icon in the card is not the icon I expected
+
+The library reads the consuming application's launcher icon. Version 1.0.0 does not expose a method to provide a custom footer icon.
+
+## Version 1.0.0 scope
+
+The public API in version 1.0.0 supports text fields, theme selection, share-message text/link, and background blur. The card artwork and layout are bundled with the library. Custom background images, individual color overrides, layout rearrangement, and custom footer icons are not part of this version's public API.
