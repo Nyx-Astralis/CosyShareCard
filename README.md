@@ -20,6 +20,22 @@ CosyShareCard is a reusable Android library written in Java. It renders a brande
 - Share through Android's `ACTION_SEND` chooser using a `FileProvider` content URI.
 - Keep generated images in the app's internal cache; no public-storage permission is required.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/images/full1.jpg" width="240"
+       alt="CosyShareCard Preview Dark"/>
+  <img src="docs/images/full2.jpg" width="240"
+       alt="CosyShareCard Preview Light"/>
+</p>
+
+<p align="center">
+  <img src="docs/images/mini1.jpg" width="240"
+       alt="CosyShareCard Mini Card Light"/>
+  <img src="docs/images/mini2.jpg" width="240"
+       alt="Mini Card Shared Dark Preview"/>
+</p>
+
 ## Requirements
 
 - Android `minSdk` 26 (Android 8.0) or higher.
@@ -164,6 +180,24 @@ Version 1.0.0 exposes text, theme, and blur configuration. The background artwor
 ## Documentation
 
 See [`docs/USAGE.md`](docs/USAGE.md) for a fuller integration walkthrough, API details, and troubleshooting.
+
+## ☕ Support the Project
+
+Enjoying **CosyShareCard**? Your support helps me maintain the library, develop new features, and continue creating open-source tools.
+
+Every contribution is greatly appreciated!
+
+<p align="center">
+  <a href="https://ko-fi.com/nyx_astralis">
+    <img src="https://ko-fi.com/img/githubbutton_sm.svg"
+         alt="Support Nyx Astralis on Ko-fi" />
+  </a>
+</p>
+
+<p align="center">
+  Thank you for supporting independent development! ❤️
+</p>
+
 
 ## License
 
