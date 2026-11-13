@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     id("maven-publish")
+    id("com.vanniktech.maven.publish") version "0.37.0"
 }
 
 android {
@@ -20,11 +21,6 @@ android {
         viewBinding = true
     }
 
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -46,6 +42,49 @@ base {
     archivesName.set("CosyShareCard")
 }
 
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates(
+        "io.github.nyx-astralis",
+        "cosysharecard",
+        "1.0.0"
+    )
+
+    pom {
+        name.set("CosyShareCard")
+        description.set("An Android library for creating and sharing cozy customizable image share cards.")
+        inceptionYear.set("2026")
+        url.set("https://github.com/Nyx-Astralis/CosyShareCard")
+
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+                distribution.set("repo")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("nyx-astralis")
+                name.set("Nyx Astralis")
+                url.set("https://github.com/Nyx-Astralis")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/Nyx-Astralis/CosyShareCard")
+            connection.set("scm:git:git://github.com/Nyx-Astralis/CosyShareCard.git")
+            developerConnection.set("scm:git:ssh://git@github.com/Nyx-Astralis/CosyShareCard.git")
+        }
+    }
+}
+
+
+
+
 afterEvaluate {
     publishing {
         publications {
@@ -57,5 +96,12 @@ afterEvaluate {
                 version = System.getenv("VERSION") ?: "1.0.0"
             }
         }
+    }
+}
+
+tasks.configureEach {
+    if (name == "signReleasePublication" ||
+        name == "publishReleasePublicationToMavenCentralRepository") {
+        enabled = false
     }
 }
